@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRẮC NGHIỆM GIẢI PHẪU GAN</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #22d3ee; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #0891b2; }
+        .option-transition { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const rawQuizData = `
+CÂU HỎI TRẮC NGHIỆM GIẢI PHẪU GAN
+TEAMDRCAT
+Tài liệu được biên soạn dựa trên kiến thức chuẩn Y HÀ NỘI
+
+Phần I: Giải phẫu Đại thể, Liên quan 
+Câu 1. Gan là tạng lớn nhất cơ thể, chiếm bao nhiêu phần trăm trọng lượng cơ thể ở người trưởng thành?
+A. 1%
+B. 2%
+C. 5%
+D. 10%
+Đáp án: B
+Giải thích: Gan là tạng lớn nhất cơ thể, chiếm tới 2% trọng lượng cơ thể ở người trưởng thành và 5% ở trẻ mới sinh.
+
+Câu 2. Đối chiếu lên thành ngực, giới hạn trên của gan ở bên phải tương ứng với khoang gian sườn nào, ngay dưới núm vú phải?
+A. Khoang gian sườn 3
+B. Khoang gian sườn 4
+C. Khoang gian sườn 5
+D. Khoang gian sườn 6
+Đáp án: B
+Giải thích: Giới hạn trên của gan được mô tả là một đường chạy lên trên và sang phải tới một điểm ở dưới núm vú phải, tương ứng với khoang gian sườn 4. Đây là điểm cao nhất của vòm gan phải.
+
+Câu 3. Mặt hoành của gan được chia thành mấy phần?
+A. 2 phần: trước và sau
+B. 3 phần: trước, trên và phải
+C. 4 phần: trước, trên, phải và sau
+D. 5 phần: trước, trên, phải, sau và trái
+Đáp án: C
+Giải thích: Mặt hoành của gan lồi và áp sát vào cơ hoành. Dựa vào các chiều cong của nó, mặt hoành được chia thành bốn phần: trước, trên, phải và sau.
+
+Câu 4. "Vùng trần" của gan là một vùng không được phúc mạc che phủ, nằm ở phần nào của mặt hoành?
+A. Phần trước
+B. Phần trên
+C. Phần phải
+D. Phần sau
+Đáp án: D
+Giải thích: Vùng trần là một vùng hình tam giác không được phúc mạc phủ, nằm ở phần sau của mặt hoành. Vùng này dính trực tiếp với cơ hoành bằng mô liên kết và được giới hạn bởi các lá của dây chằng vành.
+
+Câu 5. Dây chằng tròn của gan là di tích của cấu trúc nào trong thời kỳ phôi thai?
+A. Ống tĩnh mạch 
+B. Tĩnh mạch rốn phải
+C. Tĩnh mạch rốn trái
+D. Động mạch rốn
+Đáp án: C
+Giải thích: Dây chằng tròn nằm trong khe dây chằng tròn ở mặt tạng và ở bờ tự do của dây chằng liềm. Nó là một tàn tích của tĩnh mạch rốn trái trong tuần hoàn phôi thai.
+
+Câu 6. Cấu trúc nào sau đây KHÔNG phải là mốc giới để phân chia 4 thùy (phải, trái, vuông, đuôi) ở mặt tạng và mặt sau của gan?
+A. Hố túi mật
+B. Rãnh tĩnh mạch chủ dưới
+C. Khe dây chằng tròn
+D. Dây chằng liềm
+Đáp án: D
+Giải thích: Bốn thùy ở mặt dưới (mặt tạng và mặt sau) được ngăn cách bởi một hệ thống các rãnh và khe hình chữ H, bao gồm: hố túi mật, rãnh tĩnh mạch chủ dưới, khe dây chằng tròn, khe dây chằng tĩnh mạch và cửa gan. Dây chằng liềm là mốc phân chia thùy phải và thùy trái ở mặt hoành.
+
+Câu 7. Mặt tạng của thùy gan trái có vết ấn của cơ quan nào?
+A. Góc đại tràng phải và thận phải
+B. Dạ dày và thực quản
+C. Tá tràng và tụy
+D. Lách và đại tràng ngang
+Đáp án: B
+Giải thích: Mặt tạng của thùy trái có hai vết ấn liên tiếp là ấn thực quản ở phía sau và ấn dạ dày ở phía trước, do đáy vị của dạ dày ấn vào.
+
+Câu 8. Phương tiện nào được xem là phương tiện giữ gan tại chỗ quan trọng và chắc chắn nhất?
+A. Dây chằng liềm
+B. Dây chằng vành
+C. Mạc nối nhỏ
+D. Tĩnh mạch chủ dưới và các tĩnh mạch gan
+Đáp án: D
+Giải thích: Gan được giữ tại chỗ bởi nhiều phương tiện, nhưng sự kết nối chặt chẽ giữa các tĩnh mạch gan và tĩnh mạch chủ dưới, cùng với sự dính của vùng trần vào cơ hoành, là các yếu tố cố định chính và vững chắc nhất. Các dây chằng phúc mạc khác chỉ có vai trò thứ yếu.
+
+Câu 9. Dây chằng tam giác trái được tạo nên bởi sự hợp lại của các lá dây chằng nào?
+A. Dây chằng liềm
+B. Dây chằng vành
+C. Dây chằng tròn
+D. Mạc nối nhỏ
+Đáp án: B
+Giải thích: Các lá trên và dưới của dây chằng vành chạy về hai phía của gan. Khi chúng tiến sát lại gần nhau ở đầu bên trái của gan, chúng hợp lại để tạo thành dây chằng tam giác trái.
+
+Câu 10. Thùy vuông của gan liên quan chủ yếu với các cấu trúc nào sau đây?
+A. Thận phải và tuyến thượng thận phải
+B. Đáy vị dạ dày
+C. Môn vị và phần trên tá tràng
+D. Góc đại tràng phải
+Đáp án: C
+Giải thích: Thùy vuông nằm ở mặt tạng, phía trước cửa gan, giữa hố túi mật và khe dây chằng tròn. Nó liên quan mật thiết với môn vị của dạ dày và phần trên của tá tràng.
+
+Câu 11. Ấn tim nằm ở phần nào của mặt hoành của gan?
+A. Phần trước
+B. Phần trên
+C. Phần phải
+D. Phần sau
+Đáp án: B
+Giải thích: Phần trên của mặt hoành lồi lên và áp sát vào vòm hoành. Ở giữa phần này có một vùng lõm nông gọi là ấn tim, tương ứng với vị trí của tim nằm trên trung tâm gân của cơ hoành.
+
+Câu 12. Bờ dưới của gan có một khuyết đặc trưng do cấu trúc nào tạo nên?
+A. Đáy túi mật
+B. Tĩnh mạch chủ dưới
+C. Dây chằng tròn
+D. Cửa gan
+Đáp án: C
+Giải thích: Bờ dưới của gan là một bờ sắc. Trên bờ này có một khuyết gọi là khuyết dây chằng tròn, là nơi dây chằng tròn bám vào gan.
+
+Câu 13. Cấu trúc nào nằm trong khe dây chằng tĩnh mạch?
+A. Tàn tích của tĩnh mạch rốn trái
+B. Tàn tích của ống tĩnh mạch 
+C. Tĩnh mạch cửa
+D. Tĩnh mạch gan giữa
+Đáp án: B
+Giải thích: Khe dây chằng tĩnh mạch ngăn cách thùy đuôi với thùy trái ở mặt sau. Khe này chứa dây chằng tĩnh mạch, là tàn tích của ống tĩnh mạch trong thời kỳ phôi thai, có chức năng nối tắt máu từ tĩnh mạch rốn vào tĩnh mạch chủ dưới.
+
+Câu 14. Qua cơ hoành, phần phải của mặt hoành gan liên quan với phổi và màng phổi phải và các xương sườn nào?
+A. Xương sườn V - IX
+B. Xương sườn VI - X
+C. Xương sườn VII - XI
+D. Xương sườn VIII - XII
+Đáp án: C
+Giải thích: Phần phải của mặt hoành gan được vòm hoành phải ngăn cách với đáy phổi phải, màng phổi phải và các xương sườn từ VII đến XI ở đường nách giữa.
+
+Câu 15. Trong phẫu thuật, để bộc lộ thực quản đoạn bụng, phẫu thuật viên thường cần phải cắt dây chằng nào sau đây?
+A. Dây chằng liềm
+B. Dây chằng tam giác phải
+C. Dây chằng tam giác trái
+D. Dây chằng vành
+Đáp án: C
+Giải thích: Dây chằng tam giác trái nằm ở phía trước thực quản đoạn bụng và đáy vị. Việc cắt dây chằng này cho phép phẫu thuật viên di động và lật thùy gan trái sang bên phải, từ đó bộc lộ rõ mặt trước của tâm vị và thực quản bụng.
+
+Câu 16. (Case lâm sàng) Một bệnh nhân nam 45 tuổi nhập viện vì sốt cao, đau tức vùng hạ sườn phải. Siêu âm và CT scan bụng phát hiện một khối áp xe lớn ở mặt sau gan phải, sát cơ hoành. Vài ngày sau, bệnh nhân xuất hiện triệu chứng khó thở và tràn dịch màng phổi phải. Biến chứng này có khả năng xảy ra nhất do sự lan truyền nhiễm trùng qua cấu trúc giải phẫu nào?
+A. Dây chằng vành
+B. Tĩnh mạch chủ dưới
+C. Vùng trần của gan
+D. Dây chằng tam giác phải
+Đáp án: C
+Giải thích: Vùng trần của gan là vùng không có phúc mạc che phủ, dính trực tiếp vào cơ hoành qua mô liên kết lỏng lẻo. Một ổ áp xe ở vị trí này có thể dễ dàng phá vỡ lớp mô liên kết và cơ hoành, lan trực tiếp vào khoang màng phổi gây viêm mủ màng phổi hoặc tràn dịch màng phổi phản ứng. 
+
+Câu 17. (Case lâm sàng) Một bệnh nhân bị tai nạn giao thông, chấn thương vùng bụng kín. Khám lâm sàng thấy có dấu hiệu "đau vai phải" (dấu hiệu Kehr). Dấu hiệu này được giải thích bởi sự kích thích của máu trong ổ bụng lên dây thần kinh nào chi phối cho bề mặt cơ hoành?
+A. Dây thần kinh liên sườn
+B. Dây thần kinh hoành
+C. Dây thần kinh lang thang (phế vị)
+D. Các nhánh của đám rối tạng
+Đáp án: B
+Giải thích: Dấu hiệu Kehr là hiện tượng đau quy chiếu lên vùng vai, gây ra bởi sự kích thích cơ hoành. Mặt hoành của gan liên quan mật thiết với cơ hoành. Cơ hoành được chi phối vận động và cảm giác bởi dây thần kinh hoành (xuất phát từ các rễ cổ C3, C4, C5).
+
+Câu 18. Thùy đuôi của gan có hai mỏm đặc trưng là mỏm đuôi và mỏm nhú. Mỏm đuôi nằm ở bên nào?
+A. Bên phải, gần rãnh tĩnh mạch chủ dưới
+B. Bên trái, gần khe dây chằng tĩnh mạch
+C. Phía trước, gần thùy vuông
+D. Phía sau, gần vùng trần
+Đáp án: A
+Giải thích: Thùy đuôi nằm ở mặt sau, có hai mỏm nằm sát cửa gan. Mỏm đuôi nằm ở bên phải, nối thùy đuôi với thùy phải và nằm gần rãnh tĩnh mạch chủ dưới. Mỏm nhú nằm ở bên trái.
+
+Câu 19. Bờ tự do của dây chằng liềm chứa cấu trúc nào sau đây?
+A. Dây chằng tĩnh mạch và các tĩnh mạch cạnh rốn
+B. Dây chằng tròn và các tĩnh mạch cạnh rốn
+C. Động mạch gan riêng
+D. Ống mật chủ
+Đáp án: B
+Giải thích: Dây chằng liềm có một bờ tự do đi từ rốn tới bờ dưới của gan. Bờ tự do này chứa dây chằng tròn (di tích tĩnh mạch rốn trái) và các tĩnh mạch cạnh rốn nhỏ đi kèm.
+
+Câu 20. Vùng nào của gan thường không thể sờ thấy được khi khám bụng ở người bình thường nhưng có thể phát hiện bệnh lý qua phương pháp gõ?
+A. Bờ dưới gan
+B. Phần trước của mặt hoành nằm trong góc dưới ức
+C. Đáy túi mật
+D. Bờ phải của gan
+Đáp án: B
+Giải thích: Phần trước của mặt hoành có một vùng nằm ngay sau thành bụng trước, trong góc dưới ức. Ở người bình thường, vùng này nằm cao và được lồng ngực che phủ nên không sờ thấy. 
+
+Phần II: Phân chia Gan theo Chức năng và Ngoại khoa 
+Câu 21. Hệ thống phân chia gan của Couinaud dựa trên nguyên tắc chính nào?
+A. Sự phân bố của các dây chằng trên bề mặt gan
+B. Sự phân nhánh của tĩnh mạch cửa và sự sắp xếp của các tĩnh mạch gan
+C. Sự phân nhánh của đường mật trong gan
+D. Hình thể giải phẫu bên ngoài của các thùy gan
+Đáp án: B
+
+Câu 22. Khe cửa chính (khe giữa) chia gan thành hai nửa gan chức năng (phải và trái). Khe này chứa cấu trúc mạch máu nào?
+A. Tĩnh mạch gan phải
+B. Tĩnh mạch gan giữa
+C. Tĩnh mạch gan trái
+D. Nhánh chính của tĩnh mạch cửa
+Đáp án: B
+
+Câu 23. Theo phân loại của Couinaud, các tĩnh mạch gan (phải, giữa, trái) có vai trò gì trong phân chia gan?
+A. Nằm ở trung tâm của mỗi phân thùy
+B. Nằm trong các khe gian phân thùy, là mốc để phẫu thuật
+C. Cung cấp máu cho các phân thùy
+D. Dẫn lưu mật từ các phân thùy
+Đáp án: B
+
+Câu 24. Nửa gan phải được khe cửa phải chia thành hai phân khu. Phân khu giữa phải (phân khu trước) bao gồm các phân thùy nào?
+A. Phân thùy VI và VII
+B. Phân thùy V và VIII
+C. Phân thùy IVa và IVb
+D. Phân thùy II và III
+Đáp án: B
+
+Câu 25. Phân thùy nào còn được gọi là thùy đuôi?
+A. Phân thùy I
+B. Phân thùy II
+C. Phân thùy IV
+D. Phân thùy V
+Đáp án: A
+
+Câu 26. Khe rốn là mốc giải phẫu quan trọng ở gan trái, ngăn cách hai phân thùy nào?
+A. Phân thùy II và III
+B. Phân thùy III và IV
+C. Phân thùy IV và V
+D. Phân thùy I và IV
+Đáp án: B
+
+Câu 27. Tĩnh mạch gan trái nằm trong khe nào và ngăn cách các phân khu nào của gan trái?
+A. Khe cửa chính, ngăn cách phân khu giữa phải và giữa trái
+B. Khe cửa phải, ngăn cách phân khu bên phải và giữa phải
+C. Khe cửa trái, ngăn cách phân khu giữa trái và bên trái
+D. Khe rốn, ngăn cách phân thùy III và IV
+Đáp án: C
+
+Câu 28. Phân khu bên trái của gan bao gồm các phân thùy nào?
+A. Chỉ phân thùy II
+B. Chỉ phân thùy III
+C. Phân thùy II và III
+D. Phân thùy III và IV
+Đáp án: C
+
+Câu 29. Trong cách phân chia của Tôn Thất Tùng, nửa gan trái được chia thành các phân thùy giữa và bên bởi khe nào?
+A. Khe cửa chính
+B. Khe cửa trái
+C. Khe rốn
+D. Khe tĩnh mạch chủ
+Đáp án: C
+
+Câu 30. Phân thùy nào nằm ngay phía trên và phía sau của phân thùy V?
+A. Phân thùy IV
+B. Phân thùy VI
+C. Phân thùy VII
+D. Phân thùy VIII
+Đáp án: D
+
+Câu 31. (Case lâm sàng) Một bệnh nhân được chẩn đoán có khối u gan ác tính (HCC) đường kính 4 cm, khu trú hoàn toàn trong phân thùy VI. Phẫu thuật viên lên kế hoạch cắt phân thùy VI. Trong quá trình phẫu thuật, sau khi đã kẹp cuống mạch máu-mật của phân thùy VI, phẫu thuật viên sẽ thực hiện đường cắt nhu mô gan dọc theo mặt phẳng chứa tĩnh mạch nào?
+A. Tĩnh mạch gan giữa
+B. Tĩnh mạch gan phải
+C. Nhánh sau của tĩnh mạch cửa phải
+D. Tĩnh mạch gan trái
+Đáp án: B
+
+Câu 32. (Case lâm sàng) Một bệnh nhân 30 tuổi mắc hội chứng Budd-Chiari (tắc các tĩnh mạch gan chính). Trên hình ảnh CT, gan to, nhu mô ngấm thuốc không đều, nhưng có một vùng gan đặc biệt to ra (phì đại) và ngấm thuốc tốt hơn các vùng khác. Vùng gan đó có khả năng cao nhất là phân thùy nào?
+A. Phân thùy IV
+B. Phân thùy VII
+C. Phân thùy I (thùy đuôi)
+D. Phân thùy V
+Đáp án: C
+
+Câu 33. Phân khu bên phải (phân khu sau) của gan phải bao gồm các phân thùy nào?
+A. Phân thùy V và VIII
+B. Phân thùy VI và VII
+C. Phân thùy VII và VIII
+D. Phân thùy V và VI
+Đáp án: B
+
+Câu 34. Theo Couinaud, thùy vuông giải phẫu tương ứng với phần lớn của phân thùy chức năng nào?
+A. Phân thùy III
+B. Phân thùy IV
+C. Phân thùy V
+D. Phân thùy I
+Đáp án: B
+
+Câu 35. Bốn phân khu của gan được cấp máu bởi bốn nhánh chính của tĩnh mạch nào và được ngăn cách bởi ba tĩnh mạch nào?
+A. Cấp máu bởi tĩnh mạch gan, ngăn cách bởi tĩnh mạch cửa
+B. Cấp máu bởi tĩnh mạch cửa, ngăn cách bởi tĩnh mạch gan
+C. Cấp máu bởi động mạch gan, ngăn cách bởi đường mật
+D. Cấp máu bởi tĩnh mạch chủ, ngăn cách bởi tĩnh mạch gan
+Đáp án: B
+
+Câu 36. Trong phẫu thuật cắt gan trái, phẫu thuật viên sẽ cắt bỏ các phân thùy nào?
+A. Phân thùy I, II, III
+B. Phân thùy II, III, IV
+C. Phân thùy II, III, IV, V, VIII
+D. Phân thùy V, VI, VII, VIII
+Đáp án: B
+
+Câu 37. Phân thùy nào của gan nằm cao nhất, ngay dưới vòm hoành và ở phía sau nhất của gan phải?
+A. Phân thùy VIII
+B. Phân thùy VII
+C. Phân thùy VI
+D. Phân thùy II
+Đáp án: B
+
+Câu 38. Cấu trúc nào sau đây được coi là "nội phân thùy"?
+A. Tĩnh mạch gan phải
+B. Tĩnh mạch gan giữa
+C. Nhánh phân thùy của tĩnh mạch cửa
+D. Tĩnh mạch gan trái
+Đáp án: C
+
+Câu 39. Trong phẫu thuật cắt gan phải mở rộng, ngoài các phân thùy của gan phải (V, VI, VII, VIII), phẫu thuật viên còn cắt bỏ thêm phân thùy nào?
+A. Phân thùy I
+B. Phân thùy II
+C. Phân thùy III
+D. Phân thùy IV
+Đáp án: D
+
+Câu 40. Phân thùy nào nằm thấp nhất và ngoài nhất của gan phải?
+A. Phân thùy V
+B. Phân thùy VI
+C. Phân thùy VII
+D. Phân thùy VIII
+Đáp án: B
+
+Câu 41. Theo Tôn Thất Tùng, phân thùy giữa của gan trái (tương ứng phân thùy IV của Couinaud) được gọi là gì?
+A. Hạ phân thùy II
+B. Hạ phân thùy III
+C. Hạ phân thùy IV
+D. Phân thùy lưng
+Đáp án: C
+
+Câu 42. Mặt phẳng cắt trong phẫu thuật cắt gan trái mở rộng sẽ đi dọc theo khe nào?
+A. Khe cửa chính
+B. Khe cửa phải
+C. Khe cửa trái
+D. Khe rốn
+Đáp án: B
+
+Câu 43. Phân thùy nào của gan không tiếp xúc với mặt hoành?
+A. Phân thùy I
+B. Phân thùy V
+C. Phân thùy VI
+D. Phân thùy IV
+Đáp án: A
+
+Câu 44. Trong phẫu thuật ghép gan từ người cho sống, mảnh ghép gan phải thường bao gồm những phân thùy nào?
+A. II, III, IV
+B. V, VI, VII, VIII
+C. VI, VII
+D. V, VIII
+Đáp án: B
+
+Câu 45. Nhánh tĩnh mạch cửa trái cấp máu cho những phân thùy nào?
+A. V, VI, VII, VIII
+B. I, II, III, IV
+C. Chỉ II, III
+D. Chỉ IV, V
+Đáp án: B
+
+Phần III: Hệ thống Mạch máu Gan 
+Câu 46. Gan nhận máu từ hai nguồn chính. Tĩnh mạch cửa cung cấp khoảng bao nhiêu phần trăm lượng máu đến gan?
+A. 25%
+B. 50%
+C. 75%
+D. 100%
+Đáp án: C
+
+Câu 47. Tĩnh mạch cửa được hình thành bởi sự hợp lại của hai tĩnh mạch nào?
+A. Tĩnh mạch lách và tĩnh mạch mạc treo tràng dưới
+B. Tĩnh mạch mạc treo tràng trên và tĩnh mạch lách
+C. Tĩnh mạch mạc treo tràng trên và tĩnh mạch mạc treo tràng dưới
+D. Tĩnh mạch lách và tĩnh mạch thận trái
+Đáp án: B
+
+Câu 48. Động mạch gan riêng thường là nhánh của động mạch nào?
+A. Động mạch thân tạng
+B. Động mạch gan chung
+C. Động mạch vị tá tràng
+D. Động mạch mạc treo tràng trên
+Đáp án: B
+
+Câu 49. Trong cuống gan (trong dây chằng gan-tá tràng), ba thành phần chính được sắp xếp như thế nào từ sau ra trước?
+A. Động mạch gan riêng (sau), tĩnh mạch cửa, ống mật chủ (trước)
+B. Tĩnh mạch cửa (sau), động mạch gan riêng và ống mật chủ (trước)
+C. Ống mật chủ (sau), động mạch gan riêng, tĩnh mạch cửa (trước)
+D. Tĩnh mạch cửa (sau), ống mật chủ, động mạch gan riêng (trước)
+Đáp án: B
+
+Câu 50. Nhánh phải của động mạch gan riêng thường có liên quan quan trọng nào với đường mật?
+A. Bắt chéo trước ống gan chung
+B. Bắt chéo sau ống gan chung
+C. Đi bên trái ống gan chung
+D. Đi bên phải ống mật chủ
+Đáp án: B
+
+Câu 51. Động mạch túi mật thường xuất phát từ động mạch nào?
+A. Nhánh trái động mạch gan riêng
+B. Nhánh phải động mạch gan riêng
+C. Động mạch gan chung
+D. Động mạch vị tá tràng
+Đáp án: B
+
+Câu 52. Có bao nhiêu tĩnh mạch gan lớn chính đổ vào tĩnh mạch chủ dưới?
+A. 1
+B. 2
+C. 3
+D. 4
+Đáp án: C
+
+Câu 53. (Case lâm sàng) Một bệnh nhân nam 60 tuổi, tiền sử nghiện rượu, được chẩn đoán xơ gan. Bệnh nhân nhập viện vì nôn ra máu đỏ tươi lượng nhiều. Nội soi thực quản-dạ dày phát hiện các búi giãn tĩnh mạch thực quản đang chảy máu. Tình trạng này là hậu quả của sự tăng áp lực trong vòng nối cửa-chủ giữa tĩnh mạch nào sau đây?
+A. Tĩnh mạch vị trái và các tĩnh mạch thực quản
+B. Tĩnh mạch trực tràng trên và tĩnh mạch trực tràng giữa/dưới
+C. Các tĩnh mạch cạnh rốn và các tĩnh mạch thượng vị
+D. Tĩnh mạch lách và tĩnh mạch thận trái
+Đáp án: A
+
+Câu 54. (Case lâm sàng) Trong phẫu thuật cắt gan do chấn thương gây chảy máu không kiểm soát, phẫu thuật viên thực hiện thủ thuật Pringle bằng cách kẹp toàn bộ dây chằng gan-tá tràng. Thủ thuật này nhằm mục đích tạm thời chặn dòng máu đến gan từ các mạch nào?
+A. Tĩnh mạch cửa và các tĩnh mạch gan
+B. Động mạch gan riêng và các tĩnh mạch gan
+C. Động mạch gan riêng và tĩnh mạch cửa
+D. Chỉ có tĩnh mạch cửa
+Đáp án: C
+
+Câu 55. Vòng nối cửa-chủ ở quanh rốn, khi giãn ra trong bệnh lý tăng áp lực tĩnh mạch cửa sẽ gây ra dấu hiệu lâm sàng nào?
+A. Trĩ nội
+B. Giãn tĩnh mạch thực quản
+C. Tuần hoàn bàng hệ kiểu "đầu sứa" 
+D. Cổ trướng
+Đáp án: C
+
+Câu 56. Tĩnh mạch nào sau đây KHÔNG đổ trực tiếp vào tĩnh mạch cửa?
+A. Tĩnh mạch vị trái
+B. Tĩnh mạch lách
+C. Tĩnh mạch mạc treo tràng trên
+D. Tĩnh mạch thận phải
+Đáp án: D
+
+Câu 57. Tĩnh mạch gan giữa dẫn lưu máu chủ yếu từ các phân thùy nào?
+A. Phân thùy II, III
+B. Phân thùy VI, VII
+C. Phân thùy IV, V, VIII
+D. Phân thùy I
+Đáp án: C
+
+Câu 58. Động mạch gan chung thường là một trong ba nhánh chính của động mạch nào?
+A. Động mạch chủ bụng
+B. Động mạch mạc treo tràng trên
+C. Động mạch thân tạng
+D. Động mạch thận phải
+Đáp án: C
+
+Câu 59. Tĩnh mạch trực tràng trên là một nhánh của hệ tĩnh mạch nào?
+A. Tĩnh mạch mạc treo tràng trên
+B. Tĩnh mạch mạc treo tràng dưới
+C. Tĩnh mạch chậu trong
+D. Tĩnh mạch lách
+Đáp án: B
+
+Câu 60. Tĩnh mạch gan phải là tĩnh mạch gan lớn nhất, chạy trong khe nào?
+A. Khe cửa chính
+B. Khe cửa phải
+C. Khe cửa trái
+D. Khe rốn
+Đáp án: B
+
+Câu 61. Nhánh trái của tĩnh mạch cửa có đặc điểm gì so với nhánh phải?
+A. Ngắn hơn và lớn hơn
+B. Dài hơn và bé hơn
+C. Chạy thẳng hơn
+D. Nhận ít nhánh phụ hơn
+Đáp án: B
+
+Câu 62. Động mạch vị tá tràng là nhánh của động mạch nào?
+A. Động mạch gan riêng
+B. Động mạch gan chung
+C. Động mạch lách
+D. Động mạch mạc treo tràng trên
+Đáp án: B
+
+Câu 63. Các tĩnh mạch gan nhỏ thường đổ vào phần nào của tĩnh mạch chủ dưới?
+A. Phần trên gan của tĩnh mạch chủ dưới
+B. Phần dưới gan của tĩnh mạch chủ dưới
+C. Hợp lưu với các tĩnh mạch gan lớn
+D. Không đổ vào tĩnh mạch chủ dưới
+Đáp án: B
+
+Câu 64. Động mạch vị phải thường tách ra từ động mạch nào?
+A. Động mạch gan chung
+B. Động mạch gan riêng
+C. Động mạch vị tá tràng
+D. Động mạch thân tạng
+Đáp án: B
+
+Câu 65. Máu từ các mao mạch dạng xoang trong tiểu thùy gan được tập trung về đâu trước khi đổ vào các tĩnh mạch gan?
+A. Tĩnh mạch gian tiểu thùy
+B. Tĩnh mạch trung tâm tiểu thùy
+C. Nhánh của tĩnh mạch cửa
+D. Vi quản mật
+Đáp án: B
+
+Câu 66. Tĩnh mạch lách thường nhận máu từ tĩnh mạch nào trước khi hợp với tĩnh mạch mạc treo tràng trên?
+A. Tĩnh mạch mạc treo tràng dưới
+B. Tĩnh mạch thận trái
+C. Tĩnh mạch thượng thận trái
+D. Tĩnh mạch hoành dưới
+Đáp án: A
+
+Câu 67. Nhánh trái của động mạch gan riêng cấp máu cho các phân thùy nào?
+A. V, VI, VII, VIII
+B. II, III, IV
+C. Chỉ II, III
+D. Chỉ V, VIII
+Đáp án: B
+
+Câu 68. Trong trường hợp tắc tĩnh mạch cửa, dòng máu từ ruột có thể đi theo con đường bàng hệ nào để về tim?
+A. Qua vòng nối thực quản về tĩnh mạch đơn
+B. Qua vòng nối trực tràng về tĩnh mạch chậu trong
+C. Qua vòng nối quanh rốn về tĩnh mạch thượng vị
+D. Tất cả các con đường trên
+Đáp án: D
+
+Câu 69. Tĩnh mạch gan trái thường hợp với tĩnh mạch nào trước khi đổ vào tĩnh mạch chủ dưới?
+A. Tĩnh mạch gan phải
+B. Tĩnh mạch gan giữa
+C. Một nhánh từ thùy đuôi
+D. Không hợp với tĩnh mạch nào
+Đáp án: B
+
+Câu 70. Các tĩnh mạch cạnh rốn chạy trong cấu trúc nào?
+A. Dây chằng vành
+B. Dây chằng tam giác
+C. Dây chằng liềm (bờ tự do)
+D. Mạc nối nhỏ
+Đáp án: C
+
+Phần IV: Hệ thống Đường mật và Túi mật 
+Câu 71. Ống mật chủ được hình thành do sự hợp lại của hai ống nào?
+A. Ống gan phải và ống gan trái
+B. Ống gan chung và ống túi mật
+C. Ống gan trái và ống túi mật
+D. Ống gan chung và ống tụy chính
+Đáp án: B
+
+Câu 72. Đoạn nào của ống mật chủ chạy trong một rãnh ở mặt sau của đầu tụy?
+A. Đoạn trên tá tràng
+B. Đoạn sau tá tràng
+C. Đoạn trong tụy
+D. Đoạn trong thành tá tràng
+Đáp án: C
+
+Câu 73. Bóng gan tụy được tạo thành bởi sự hợp nhất của ống mật chủ và ống nào, và đổ vào đâu?
+A. Hợp với ống tụy phụ, đổ vào nhú tá bé
+B. Hợp với ống tụy chính, đổ vào nhú tá lớn
+C. Hợp với ống túi mật, đổ vào phần trên tá tràng
+D. Hợp với ống gan chung, đổ vào môn vị
+Đáp án: B
+
+Câu 74. Đáy túi mật khi căng to có thể tiếp xúc với thành bụng trước ở điểm nào?
+A. Giao điểm của đường giữa và bờ sườn
+B. Giao điểm của bờ ngoài cơ thẳng bụng và bờ sườn phải
+C. Ngay dưới mũi ức
+D. Tại rốn
+Đáp án: B
+
+Câu 75. Cấu trúc nào trong lòng ống túi mật có dạng các nếp niêm mạc hình xoắn ốc, giúp giữ cho ống không bị xẹp?
+A. Cơ thắt Oddi
+B. Nếp xoắn (van Heister)
+C. Nhú tá lớn
+D. Các tuyến mật
+Đáp án: B
+
+Câu 76. Đường mật chính bao gồm các thành phần nào sau đây?
+A. Túi mật và ống túi mật
+B. Ống gan phải, ống gan trái, ống gan chung, ống mật chủ
+C. Ống gan chung, ống mật chủ, ống tụy
+D. Toàn bộ cây đường mật trong và ngoài gan
+Đáp án: B
+
+Câu 77. (Case lâm sàng) Một bệnh nhân nữ 65 tuổi nhập viện vì vàng da, vàng mắt tăng dần từ 2 tuần nay, không kèm đau bụng, sụt cân nhiều. Khám thấy túi mật to, không đau (dấu hiệu Courvoisier). Chẩn đoán có khả năng cao nhất là gì, dựa trên mối liên quan giải phẫu?
+A. Sỏi ống mật chủ
+B. Viêm đường mật cấp
+C. U đầu tụy
+D. Viêm gan virus
+Đáp án: C
+
+Câu 78. (Case lâm sàng) Một phẫu thuật viên đang thực hiện phẫu thuật cắt túi mật nội soi. Để xác định và kẹp động mạch túi mật một cách an toàn, phẫu thuật viên cần bộc lộ rõ một tam giác phẫu thuật được giới hạn bởi các cấu trúc nào (Tam giác Calot)?
+A. Ống gan chung, ống mật chủ và bờ gan
+B. Ống túi mật, ống gan chung và bờ dưới gan
+C. Ống túi mật, ống mật chủ và động mạch gan phải
+D. Dây chằng tròn, dây chằng liềm và bờ gan
+Đáp án: B
+
+Câu 79. Chiều dài trung bình của ống mật chủ ở người trưởng thành là khoảng bao nhiêu?
+A. 3 cm
+B. 5 cm
+C. 7.5 cm
+D. 12 cm
+Đáp án: C
+
+Câu 80. Ống gan chung thường bắt chéo trước cấu trúc mạch máu nào?
+A. Nhánh phải động mạch gan riêng
+B. Nhánh trái động mạch gan riêng
+C. Tĩnh mạch cửa
+D. Tĩnh mạch chủ dưới
+Đáp án: B
+
+Câu 81. Phần nào của túi mật thường nhô ra khỏi bờ dưới của gan?
+A. Cổ túi mật
+B. Thân túi mật
+C. Đáy túi mật
+D. Ống túi mật
+Đáp án: C
+
+Câu 82. Trong cuống gan, ống mật chủ nằm ở vị trí nào so với tĩnh mạch cửa?
+A. Trước-phải
+B. Trước-trái
+C. Sau-phải
+D. Sau-trái
+Đáp án: A
+
+Câu 83. (Case lâm sàng) Một bệnh nhân nhập viện vì đau bụng dữ dội vùng thượng vị lan ra sau lưng, kèm theo sốt và vàng da. Xét nghiệm cho thấy men tụy (amylase, lipase) và bilirubin máu đều tăng cao. Siêu âm thấy sỏi nhỏ trong túi mật và ống mật chủ giãn. Tình trạng viêm tụy cấp và tắc mật này có khả năng cao nhất là do viên sỏi bị kẹt ở đâu?
+A. Cổ túi mật
+B. Ngã ba ống gan chung và ống túi mật
+C. Bóng gan tụy 
+D. Đoạn sau tá tràng của ống mật chủ
+Đáp án: C
+
+Câu 84. Cổ túi mật có một chỗ thắt trước khi liên tiếp với cấu trúc nào?
+A. Thân túi mật
+B. Đáy túi mật
+C. Ống túi mật
+D. Ống gan chung
+Đáp án: C
+
+Câu 85. Túi mật được phúc mạc che phủ ở mặt nào?
+A. Mặt trên (mặt dính vào gan)
+B. Mặt dưới (mặt tự do)
+C. Cả hai mặt
+D. Không được phúc mạc che phủ
+Đáp án: B
+
+Phần V: Cấu trúc Vi thể, Dẫn lưu Bạch huyết và Chi phối Thần kinh 
+Câu 86. Đơn vị cấu trúc và chức năng cơ bản của gan được gọi là gì?
+A. Tế bào Kupffer
+B. Mao mạch dạng xoang
+C. Tiểu thùy gan
+D. Khoảng cửa
+Đáp án: C
+
+Câu 87. "Bộ ba khoảng cửa" nằm ở ngoại vi tiểu thùy gan bao gồm ba thành phần nào?
+A. Tĩnh mạch trung tâm, động mạch gan, ống mật
+B. Nhánh của tĩnh mạch cửa, nhánh của động mạch gan, ống mật gian tiểu thùy
+C. Tĩnh mạch gan, động mạch gan, vi quản mật
+D. Tĩnh mạch cửa, tĩnh mạch trung tâm, tế bào Kupffer
+Đáp án: B
+
+Câu 88. Trong tiểu thùy gan, dòng chảy của máu và dòng chảy của mật có chiều như thế nào?
+A. Cả hai cùng chảy từ trung tâm ra ngoại vi
+B. Cả hai cùng chảy từ ngoại vi vào trung tâm
+C. Máu chảy từ ngoại vi vào trung tâm, mật chảy từ trung tâm ra ngoại vi
+D. Máu chảy từ trung tâm ra ngoại vi, mật chảy từ ngoại vi vào trung tâm
+Đáp án: C
+
+Câu 89. Tế bào Kupffer là loại tế bào gì và nằm ở đâu?
+A. Tế bào gan sản xuất mật, nằm trong các bè gan
+B. Tế bào nội mô, lót lòng mao mạch dạng xoang
+C. Đại thực bào thường trú, nằm trong lòng mao mạch dạng xoang
+D. Tế bào dự trữ mỡ, nằm ở khoảng Disse
+Đáp án: C
+
+Câu 90. Thần kinh chi phối cho nhu mô gan và đường mật chủ yếu xuất phát từ đâu?
+A. Đám rối thắt lưng
+B. Dây thần kinh hoành
+C. Đám rối gan (từ đám rối tạng và thần kinh X)
+D. Các dây thần kinh liên sườn dưới
+Đáp án: C
+
+Câu 91. Cảm giác đau từ nhu mô gan (ví dụ trong viêm gan) thường có đặc điểm gì?
+A. Đau chói, khu trú rõ ở hạ sườn phải
+B. Đau âm ỉ, lan lên vai phải
+C. Đau âm ỉ, khu trú kém ở vùng thượng vị
+D. Đau quặn từng cơn
+Đáp án: C
+
+Câu 92. Cơn đau buốt, khu trú rõ rệt khi gan bị viêm hoặc có khối u lớn là do sự kích thích vào cấu trúc nào?
+A. Nhu mô gan
+B. Bao xơ của gan (bao Glisson)
+C. Tĩnh mạch trung tâm tiểu thùy
+D. Các vi quản mật
+Đáp án: B
+
+Câu 93. Các sợi thần kinh phế vị (đối giao cảm) có tác dụng gì lên túi mật và đường mật?
+A. Gây co túi mật và giãn cơ thắt đường mật
+B. Gây giãn túi mật và co cơ thắt đường mật
+C. Không có tác dụng lên túi mật
+D. Chỉ chi phối cảm giác đau
+Đáp án: A
+
+Câu 94. Hệ thống bạch huyết sâu ở phần trên của gan chủ yếu dẫn lưu bạch huyết đi theo cấu trúc nào?
+A. Tĩnh mạch cửa về các hạch ở rốn gan
+B. Các tĩnh mạch gan và tĩnh mạch chủ dưới về các hạch cạnh tĩnh mạch chủ
+C. Động mạch gan về các hạch thân tạng
+D. Dây chằng tròn về các hạch quanh rốn
+Đáp án: B
+
+Câu 95. (Case lâm sàng) Một bệnh nhân bị sốc giảm thể tích kéo dài do mất máu. Sinh thiết gan sau đó cho thấy có hoại tử tế bào gan. Vùng nào trong tiểu thùy gan có khả năng bị tổn thương do thiếu máu cục bộ nặng nề nhất?
+A. Vùng 1 (quanh khoảng cửa)
+B. Vùng 2 (vùng giữa)
+C. Vùng 3 (quanh tĩnh mạch trung tâm)
+D. Toàn bộ tiểu thùy bị ảnh hưởng như nhau
+Đáp án: C
+
+Câu 96. (Case lâm sàng) Một bệnh nhân được chẩn đoán ung thư biểu mô tế bào gan (HCC) ở vùng sau trên của gan phải. Chụp PET-CT phát hiện các hạch di căn ở trung thất mà không thấy di căn ở các vị trí khác trong ổ bụng. Con đường di căn bạch huyết có khả năng nhất giải thích cho hiện tượng này là gì?
+A. Qua các hạch ở rốn gan rồi theo ống ngực
+B. Theo các mạch bạch huyết bề mặt đi qua vùng trần của gan vào cơ hoành
+C. Theo các mạch bạch huyết đi cùng tĩnh mạch cửa
+D. Di căn theo đường máu qua tĩnh mạch gan
+Đáp án: B
+
+Câu 97. Bao xơ của gan (bao Glisson) đi vào trong gan tại cửa gan để tạo thành cấu trúc gì?
+A. Vách gian tiểu thùy
+B. Bao xơ quanh mạch
+C. Dây chằng tĩnh mạch
+D. Mô liên kết của khoảng cửa
+Đáp án: B
+
+Câu 98. Bạch huyết từ phần lớn mặt tạng và mặt trước của gan sẽ tập trung về đâu?
+A. Các hạch cạnh tâm vị
+B. Các hạch cạnh tĩnh mạch chủ
+C. Đổ trực tiếp vào ống ngực
+D. Các hạch gan ở cửa gan
+Đáp án: D
+
+Câu 99. Các vi quản mật nằm ở đâu?
+A. Trong lòng mao mạch dạng xoang
+B. Giữa các tế bào gan liền kề trong một bè gan
+C. Tại trung tâm của tiểu thùy gan
+D. Trong khoảng cửa
+Đáp án: B
+
+Câu 100. Các mạch bạch huyết ở dây chằng tam giác phải có thể đổ trực tiếp vào đâu?
+A. Các hạch gan
+B. Các hạch thân tạng
+C. Ống ngực
+D. Các hạch cạnh tĩnh mạch chủ
+Đáp án: C
+        `;
+
+        function parseQuizData(text) {
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+            const questions = [];
+            let currentQ = null;
+            let skipMode = true;
+
+            lines.forEach(line => {
+                const isOptionA = line.match(/^A[\.\)]\s*(.*)/i);
+                const isOptionB = line.match(/^B[\.\)]\s*(.*)/i);
+                const isOptionC = line.match(/^C[\.\)]\s*(.*)/i);
+                const isOptionD = line.match(/^D[\.\)]\s*(.*)/i);
+                const isAnswer = line.match(/^Đáp án(?: đúng)?:\s*([A-D])/i);
+                const isQuestionHeader = line.match(/^Câu\s*(\d+)(?:[\.\:]\s*(.*))?/i);
+
+                if (isQuestionHeader) {
+                    skipMode = false;
+                    let id = isQuestionHeader[1];
+                    let textPart = isQuestionHeader[2] || '';
+                    currentQ = { id: id, question: textPart, options: {}, answer: '' };
+                } else if (isAnswer) {
+                    if (currentQ) {
+                        currentQ.answer = isAnswer[1].toUpperCase();
+                        questions.push(currentQ);
+                        currentQ = null;
+                        skipMode = true; 
+                    }
+                } else if (!skipMode && currentQ) {
+                    if (isOptionA) currentQ.options['A'] = isOptionA[1].trim();
+                    else if (isOptionB) currentQ.options['B'] = isOptionB[1].trim();
+                    else if (isOptionC) currentQ.options['C'] = isOptionC[1].trim();
+                    else if (isOptionD) currentQ.options['D'] = isOptionD[1].trim();
+                    else if (!line.match(/^(CÂU HỎI TRẮC NGHIỆM|TEAMDRCAT|Tài liệu|Phần|Mục|Bảng)/i)) {
+                        currentQ.question += (currentQ.question ? ' ' : '') + line;
+                    }
+                }
+            });
+            return questions;
+        }
+
+        function App() {
+            const [appState, setAppState] = useState('intro');
+            const [questions, setQuestions] = useState([]);
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [answers, setAnswers] = useState({});
+            const [flagged, setFlagged] = useState(new Set());
+            const [timeRemaining, setTimeRemaining] = useState(90 * 60); 
+            const [showMatrix, setShowMatrix] = useState(false);
+            const [isPaused, setIsPaused] = useState(false);
+            
+            const scrollContainerRef = useRef(null);
+
+            useEffect(() => {
+                setQuestions(parseQuizData(rawQuizData));
+            }, []);
+
+            useEffect(() => {
+                if (appState === 'result' && scrollContainerRef.current) {
+                    scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }, [appState]);
+
+            useEffect(() => {
+                let timer;
+                if (appState === 'quiz' && !isPaused && timeRemaining > 0) {
+                    timer = setInterval(() => setTimeRemaining(p => p - 1), 1000);
+                } else if (timeRemaining <= 0 && appState === 'quiz') {
+                    setAppState('result');
+                }
+                return () => clearInterval(timer);
+            }, [appState, timeRemaining, isPaused]);
+
+            const formatTime = (seconds) => {
+                const h = Math.floor(seconds / 3600);
+                const m = Math.floor((seconds % 3600) / 60);
+                const s = seconds % 60;
+                if (h > 0) return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            };
+
+            const startQuiz = () => {
+                setAppState('quiz');
+                setAnswers({});
+                setFlagged(new Set());
+                setTimeRemaining(90 * 60);
+                setCurrentIndex(0);
+                setIsPaused(false);
+            };
+
+            const restartQuiz = () => {
+                setAppState('intro');
+                setAnswers({});
+                setFlagged(new Set());
+                setTimeRemaining(90 * 60);
+                setCurrentIndex(0);
+                setShowMatrix(false);
+                if (scrollContainerRef.current) {
+                    scrollContainerRef.current.scrollTo({ top: 0 });
+                }
+            };
+
+            const togglePause = () => { if (appState === 'quiz') setIsPaused(!isPaused); };
+
+            const handleSelectAnswer = (key) => {
+                if (answers[currentIndex] || appState !== 'quiz' || isPaused) return;
+                setAnswers(prev => ({ ...prev, [currentIndex]: key }));
+            };
+
+            const toggleFlag = () => {
+                const newFlagged = new Set(flagged);
+                if (newFlagged.has(currentIndex)) newFlagged.delete(currentIndex);
+                else newFlagged.add(currentIndex);
+                setFlagged(newFlagged);
+            };
+
+            const calculateScore = () => questions.reduce((acc, q, i) => (answers[i] === q.answer ? acc + 1 : acc), 0);
+
+            const getEncouragement = () => {
+                if(questions.length === 0) return null;
+                const score = calculateScore();
+                const percent = score / questions.length;
+                if (percent >= 0.9) return { title: "Chức Năng Gan Hoàn Hảo!", text: "Xuất sắc! Kiến thức của bạn về gan mật cực kỳ vững chắc.", icon: "fa-filter", color: "text-yellow-600 bg-yellow-50 border-yellow-200" };
+                if (percent >= 0.7) return { title: "Chuyển Hóa Ổn Định!", text: "Bạn đã làm rất tốt! Hãy rà soát lại các dây chằng để đạt điểm tối đa.", icon: "fa-stethoscope", color: "text-cyan-500 bg-cyan-50 border-cyan-200" };
+                if (percent >= 0.5) return { title: "Coi Chừng Gan Nhiễm Mỡ!", text: "Hãy ôn tập lại bản đồ các phân thùy gan và rốn gan nhé!", icon: "fa-book-medical", color: "text-orange-500 bg-orange-50 border-orange-200" };
+                return { title: "Cần 'Giải Độc' Kiến Thức Ngay!", text: "Đừng nản chí! Hãy đọc kỹ giải thích trong tài liệu gốc và làm lại nhé!", icon: "fa-notes-medical", color: "text-red-500 bg-red-50 border-red-200" };
+            };
+
+            if (appState === 'intro') {
+                return (
+                    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+                        <div className="max-w-2xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100">
+                            <div className="bg-cyan-600 p-10 flex flex-col items-center text-white text-center">
+                                <div className="bg-white/20 p-5 rounded-full mb-5 shadow-inner"><i className="fa-solid fa-filter text-5xl text-white"></i></div>
+                                <h1 className="text-3xl md:text-4xl font-extrabold uppercase tracking-tight mb-2">Giải Phẫu Gan</h1>
+                                <p className="text-cyan-100 text-lg font-medium opacity-90 tracking-wide">TÀI LIỆU ĐƯỢC BIÊN SOẠN BỞI TEAMDRCAT</p>
+                            </div>
+                            <div className="p-10">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                    <div className="flex items-center gap-4 bg-slate-50 p-5 rounded-2xl border border-slate-100 shadow-sm">
+                                        <div className="bg-blue-100 p-3 rounded-xl text-blue-600"><i className="fa-solid fa-list-check text-2xl"></i></div>
+                                        <div><p className="text-xs text-slate-400 font-bold uppercase">Tổng câu hỏi</p><p className="text-2xl font-black text-slate-800">{questions.length}</p></div>
+                                    </div>
+                                    <div className="flex items-center gap-4 bg-slate-50 p-5 rounded-2xl border border-slate-100 shadow-sm">
+                                        <div className="bg-orange-100 p-3 rounded-xl text-orange-600"><i className="fa-regular fa-clock text-2xl"></i></div>
+                                        <div><p className="text-xs text-slate-400 font-bold uppercase">Thời gian</p><p className="text-2xl font-black text-slate-800">90 Phút</p></div>
+                                    </div>
+                                </div>
+                                <button onClick={startQuiz} className="w-full bg-cyan-600 hover:bg-cyan-700 text-white text-xl font-bold py-5 rounded-2xl transition-all shadow-lg hover:shadow-cyan-600/40 flex items-center justify-center gap-3 uppercase tracking-wide">
+                                    <i className="fa-solid fa-play text-xl"></i> Bắt đầu làm bài
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            const currentQ = questions[currentIndex];
+            const hasAnsweredCurrent = !!answers[currentIndex];
+            const msg = getEncouragement();
+
+            return (
+                <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
+                    {showMatrix && <div className="fixed inset-0 bg-slate-900/60 z-20 md:hidden backdrop-blur-sm" onClick={() => setShowMatrix(false)}></div>}
+                    
+                    <aside className={`fixed md:sticky top-0 right-0 h-screen w-[360px] md:w-[450px] bg-white border-l border-slate-200 z-30 flex flex-col transition-transform duration-300 ${showMatrix ? 'translate-x-0' : 'translate-x-full md:translate-x-0'} md:order-2 shadow-2xl md:shadow-none`}>
+                        <div className="p-6 border-b flex justify-between items-center bg-white sticky top-0">
+                            <h2 className="font-black text-slate-800 flex items-center gap-2 uppercase tracking-tighter text-lg"><i className="fa-solid fa-book-open text-xl text-cyan-600"></i> Danh sách câu hỏi</h2>
+                            <button className="md:hidden text-slate-400 p-2 bg-slate-100 rounded-full hover:bg-slate-200 transition-colors" onClick={() => setShowMatrix(false)}><i className="fa-solid fa-xmark text-xl"></i></button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-6 custom-scrollbar grid grid-cols-6 gap-3 content-start">
+                            {questions.map((q, i) => {
+                                let style = "bg-slate-50 text-slate-400 border-slate-200";
+                                if (!!answers[i]) style = answers[i] === questions[i].answer ? "bg-emerald-100 text-emerald-700 border-emerald-300" : "bg-red-100 text-red-700 border-red-300";
+                                if (currentIndex === i && appState !== 'review') style += " ring-2 ring-cyan-500 ring-offset-2";
+                                if (flagged.has(i)) style += " !border-orange-400 !bg-orange-50";
+                                return (
+                                    <button key={i} onClick={() => { if (appState === 'review') { document.getElementById(`review-q-${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }); } else { setCurrentIndex(i); } if(window.innerWidth < 768) setShowMatrix(false); }} className={`h-12 w-full rounded-xl text-sm font-extrabold border-2 transition-all relative flex items-center justify-center hover:brightness-95 ${style}`}>
+                                        {i + 1}
+                                        {flagged.has(i) && <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-orange-500 rounded-full border-2 border-white shadow-sm"></div>}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                        <div className="p-6 border-t bg-slate-50">
+                            {appState === 'quiz' ? (
+                                <button onClick={() => setAppState('result')} className="w-full bg-slate-900 text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 uppercase tracking-wider hover:bg-slate-800 transition-colors"><i className="fa-solid fa-paper-plane text-lg"></i> Nộp bài</button>
+                            ) : appState === 'review' ? (
+                                <button onClick={() => setAppState('result')} className="w-full bg-slate-900 text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 uppercase tracking-wider hover:bg-slate-800 transition-colors"><i className="fa-solid fa-arrow-left text-lg"></i> Về bảng điểm</button>
+                            ) : (
+                                <button onClick={restartQuiz} className="w-full bg-cyan-600 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-cyan-700 transition-colors"><i className="fa-solid fa-rotate-right text-lg"></i> Làm lại từ đầu</button>
+                            )}
+                        </div>
+                    </aside>
+
+                    <main className="flex-1 flex flex-col h-screen md:order-1 overflow-hidden">
+                        <header className="bg-white border-b px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 bg-cyan-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-cyan-200"><i className="fa-solid fa-filter text-2xl"></i></div>
+                                <div className="hidden sm:block"><h1 className="text-sm font-black text-slate-800 uppercase tracking-tight">Giải Phẫu Gan</h1><p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest">Tài liệu bởi TeamDrCat</p></div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                {appState === 'quiz' && (
+                                    <React.Fragment>
+                                        <div className={`px-5 py-2.5 rounded-2xl font-mono text-xl font-black border-2 flex items-center gap-2 ${timeRemaining < 300 ? 'bg-red-50 border-red-200 text-red-600 animate-pulse' : 'bg-slate-50 border-slate-200 text-slate-700'}`}>
+                                            <i className="fa-regular fa-clock text-xl"></i> {formatTime(timeRemaining)}
+                                        </div>
+                                        <button onClick={togglePause} className="p-3 bg-slate-100 rounded-2xl hover:bg-slate-200 transition-colors text-cyan-600">
+                                            {isPaused ? <i className="fa-solid fa-play text-xl"></i> : <i className="fa-solid fa-pause text-xl"></i>}
+                                        </button>
+                                    </React.Fragment>
+                                )}
+                                {appState === 'review' && <div className="px-5 py-2.5 rounded-2xl font-bold bg-orange-100 text-orange-700 flex items-center gap-2"><i className="fa-solid fa-eye text-lg"></i> <span className="hidden sm:inline">Chế độ xem lại</span></div>}
+                                <button className="md:hidden bg-cyan-50 text-cyan-600 px-4 py-3 font-bold rounded-2xl flex items-center gap-2" onClick={() => setShowMatrix(true)}><i className="fa-solid fa-bars text-lg"></i></button>
+                            </div>
+                        </header>
+
+                        <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
+                            <div className="max-w-4xl mx-auto w-full pb-8">
+                                {isPaused ? (
+                                    <div className="bg-white rounded-3xl p-16 text-center shadow-xl border border-slate-100 animate-in fade-in zoom-in duration-300 mt-10">
+                                        <div className="w-24 h-24 bg-cyan-50 text-cyan-600 rounded-full flex items-center justify-center mx-auto mb-8"><i className="fa-solid fa-pause text-5xl"></i></div>
+                                        <h2 className="text-3xl font-black text-slate-800 mb-4">Bài thi đang tạm dừng</h2>
+                                        <button onClick={togglePause} className="bg-cyan-600 text-white px-12 py-4 rounded-2xl font-bold text-xl shadow-lg shadow-cyan-200 hover:bg-cyan-700 transition-all">Tiếp tục ngay</button>
+                                    </div>
+                                ) : appState === 'result' ? (
+                                    <div className="space-y-8 animate-in slide-in-from-bottom-8 duration-500 mt-4">
+                                        <div className="bg-white p-10 md:p-12 rounded-[2rem] text-center shadow-xl border border-slate-100 relative overflow-hidden">
+                                            <div className="absolute top-0 left-0 w-full h-2 bg-emerald-500"></div>
+                                            <div className="w-24 h-24 bg-emerald-500 text-white rounded-full flex items-center justify-center text-5xl mx-auto mb-6 shadow-lg border-4 border-emerald-50"><i className="fa-solid fa-shield-halved text-4xl"></i></div>
+                                            <h2 className="text-3xl font-black text-slate-800 mb-6">Hoàn thành bài test!</h2>
+                                            {msg && <div className={`p-6 rounded-2xl border mb-8 flex flex-col items-center gap-2 ${msg.color}`}><i className={`fa-solid ${msg.icon} text-4xl mb-1 opacity-80`}></i><h3 className="text-xl font-black uppercase tracking-wide">{msg.title}</h3><p className="text-base font-medium opacity-90 max-w-lg">{msg.text}</p></div>}
+                                            <div className="flex flex-col items-center gap-1 mb-8"><div className="flex items-baseline gap-2"><span className="text-7xl font-black text-slate-900 tracking-tighter">{calculateScore()}</span><span className="text-2xl font-bold text-slate-300">/ {questions.length}</span></div><p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Điểm số của bạn</p></div>
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
+                                                <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-100"><p className="text-[10px] font-black text-emerald-600 uppercase mb-1">Đúng</p><p className="text-xl font-black text-emerald-700">{calculateScore()}</p></div>
+                                                <div className="bg-red-50 p-3 rounded-xl border border-red-100"><p className="text-[10px] font-black text-red-600 uppercase mb-1">Sai</p><p className="text-xl font-black text-red-700">{Object.keys(answers).length - calculateScore()}</p></div>
+                                                <div className="bg-slate-50 p-3 rounded-xl border border-slate-100"><p className="text-[10px] font-black text-slate-400 uppercase mb-1">Bỏ qua</p><p className="text-xl font-black text-slate-500">{questions.length - Object.keys(answers).length}</p></div>
+                                                <div className="bg-orange-50 p-3 rounded-xl border border-orange-100"><p className="text-[10px] font-black text-orange-600 uppercase mb-1">Cờ</p><p className="text-xl font-black text-orange-700">{flagged.size}</p></div>
+                                            </div>
+                                            <button onClick={restartQuiz} className="w-full bg-slate-900 hover:bg-slate-800 text-white text-lg font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-slate-500/30 uppercase tracking-wide mb-3"><i className="fa-solid fa-rotate-right text-xl"></i> Làm lại bài test</button>
+                                            <button onClick={() => { setAppState('review'); setCurrentIndex(0); }} className="w-full bg-cyan-100 hover:bg-cyan-200 text-cyan-700 text-lg font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all uppercase tracking-wide"><i className="fa-solid fa-eye text-xl"></i> Xem lại bài làm</button>
+                                        </div>
+                                    </div>
+                                ) : appState === 'review' ? (
+                                    <div className="space-y-6 animate-in fade-in duration-300">
+                                        <div className="bg-orange-50 p-4 rounded-2xl border border-orange-200 flex items-center justify-between shadow-sm sticky top-0 z-20"><h2 className="text-lg font-black text-orange-800 uppercase tracking-tight"><i className="fa-solid fa-list-check mr-2"></i> Danh sách tất cả câu hỏi</h2></div>
+                                        {questions.map((q, index) => {
+                                            const isSelected = !!answers[index];
+                                            const isCorrect = answers[index] === q.answer;
+                                            return (
+                                                <div key={index} id={`review-q-${index}`} className={`bg-white rounded-[1.5rem] shadow-sm border-2 p-6 md:p-8 relative overflow-hidden ${isSelected ? (isCorrect ? 'border-emerald-200' : 'border-red-200') : 'border-slate-200'}`}>
+                                                    <div className="flex justify-between items-center mb-6">
+                                                        <div className="flex items-center gap-3">
+                                                            <span className={`px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest text-white shadow-sm ${isSelected ? (isCorrect ? 'bg-emerald-500' : 'bg-red-500') : 'bg-slate-400'}`}>Câu {q.id}</span>
+                                                            {isSelected ? (isCorrect ? <span className="text-emerald-600 font-bold text-sm"><i className="fa-solid fa-check mr-1"></i>Đúng</span> : <span className="text-red-600 font-bold text-sm"><i className="fa-solid fa-xmark mr-1"></i>Sai</span>) : <span className="text-slate-500 font-bold text-sm"><i className="fa-solid fa-minus mr-1"></i>Chưa trả lời</span>}
+                                                        </div>
+                                                    </div>
+                                                    <h3 className="text-lg md:text-xl font-bold text-slate-800 leading-snug mb-6">{q.question}</h3>
+                                                    <div className="grid gap-3">
+                                                        {['A', 'B', 'C', 'D'].map(key => {
+                                                            const label = q.options[key];
+                                                            if (!label) return null;
+                                                            const isUserChoice = answers[index] === key;
+                                                            const isCorrectOption = q.answer === key;
+                                                            let stateStyle = "border-slate-200 bg-slate-50 text-slate-500 opacity-70 grayscale";
+                                                            if (isCorrectOption) stateStyle = "bg-emerald-50 border-emerald-500 text-emerald-800 shadow-sm ring-1 ring-emerald-500";
+                                                            else if (isUserChoice) stateStyle = "bg-red-50 border-red-500 text-red-800 shadow-sm";
+                                                            return (
+                                                                <div key={key} className={`w-full p-4 rounded-xl border-2 text-left flex items-center gap-4 relative ${stateStyle}`}>
+                                                                    <span className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-base shrink-0 ${isCorrectOption ? 'bg-emerald-500 text-white border-emerald-500' : isUserChoice ? 'bg-red-500 text-white border-red-500' : 'bg-white text-slate-500 border-2 border-slate-200'}`}>{key}</span>
+                                                                    <span className="text-base font-medium leading-normal flex-1 pr-8">{label}</span>
+                                                                    {isCorrectOption && <i className="fa-solid fa-circle-check text-2xl text-emerald-500 absolute right-4 top-1/2 -translate-y-1/2"></i>}
+                                                                    {isUserChoice && !isCorrectOption && <i className="fa-solid fa-circle-xmark text-2xl text-red-500 absolute right-4 top-1/2 -translate-y-1/2"></i>}
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        <div className="bg-white rounded-[1.5rem] shadow-sm border border-slate-200 p-6 md:p-8 relative overflow-hidden">
+                                            <div className="flex justify-between items-center mb-6">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="bg-cyan-600 text-white px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest shadow-sm">Câu {currentQ?.id}</span>
+                                                    <span className="text-slate-400 font-bold text-xs tracking-widest uppercase">/ {questions.length}</span>
+                                                </div>
+                                                <button onClick={toggleFlag} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border ${flagged.has(currentIndex) ? 'bg-orange-50 border-orange-400 text-orange-600' : 'bg-white border-slate-200 text-slate-400 hover:text-slate-600'}`}><i className="fa-solid fa-flag text-sm"></i><span className="hidden sm:inline">Đánh dấu</span></button>
+                                            </div>
+                                            <h3 className="text-lg md:text-xl font-bold text-slate-800 leading-snug mb-6">{currentQ?.question}</h3>
+                                            <div className="grid gap-3">
+                                                {['A', 'B', 'C', 'D'].map(key => {
+                                                    const label = currentQ?.options[key];
+                                                    if (!label) return null;
+                                                    const isSelected = answers[currentIndex] === key;
+                                                    const isCorrect = currentQ.answer === key;
+                                                    const showAnswerState = hasAnsweredCurrent;
+                                                    let stateStyle = "border-slate-200 bg-white hover:border-cyan-300 hover:bg-cyan-50/50";
+                                                    if (showAnswerState) {
+                                                        if (isCorrect) stateStyle = "bg-emerald-50 border-emerald-500 text-emerald-800 shadow-sm";
+                                                        else if (isSelected) stateStyle = "bg-red-50 border-red-500 text-red-800 shadow-sm";
+                                                        else stateStyle = "opacity-50 border-slate-100 bg-slate-50 grayscale";
+                                                    }
+                                                    return (
+                                                        <button key={key} onClick={() => handleSelectAnswer(key)} disabled={showAnswerState} className={`group w-full p-4 rounded-xl border-2 text-left flex items-center gap-4 option-transition relative ${stateStyle}`}>
+                                                            <span className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-base shrink-0 transition-all ${showAnswerState ? (isCorrect ? 'bg-emerald-500 text-white border-emerald-500' : isSelected ? 'bg-red-500 text-white border-red-500' : 'bg-slate-200 text-slate-400 border-slate-200') : 'bg-white text-slate-500 border-2 border-slate-200 group-hover:bg-cyan-600 group-hover:text-white group-hover:border-cyan-600'}`}>{key}</span>
+                                                            <span className="text-base font-medium leading-normal flex-1 pr-8">{label}</span>
+                                                            {showAnswerState && isCorrect && <i className="fa-solid fa-circle-check text-2xl text-emerald-500 absolute right-4 top-1/2 -translate-y-1/2"></i>}
+                                                            {showAnswerState && isSelected && !isCorrect && <i className="fa-solid fa-circle-xmark text-2xl text-red-500 absolute right-4 top-1/2 -translate-y-1/2"></i>}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center justify-between gap-4 pt-4 pb-20 md:pb-4">
+                                            <button onClick={() => setCurrentIndex(p => Math.max(0, p - 1))} disabled={currentIndex === 0} className="flex-1 bg-white border border-slate-200 px-6 py-3.5 rounded-xl font-bold text-slate-500 hover:text-slate-800 disabled:opacity-0 transition-all flex items-center justify-center gap-2 uppercase tracking-wide text-xs"><i className="fa-solid fa-chevron-left text-sm"></i> <span className="hidden sm:inline">Câu trước</span></button>
+                                            <button onClick={() => setCurrentIndex(p => Math.min(questions.length - 1, p + 1))} disabled={currentIndex === questions.length - 1} className="flex-1 bg-white border border-slate-200 px-6 py-3.5 rounded-xl font-bold text-slate-800 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm flex items-center justify-center gap-2 uppercase tracking-wide text-xs"><span className="hidden sm:inline">Câu tiếp</span> <i className="fa-solid fa-chevron-right text-sm"></i></button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
